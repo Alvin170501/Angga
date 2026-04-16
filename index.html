@@ -26,19 +26,18 @@
             overflow-x: hidden; 
         }
 
-        /* Pattern Background */
-        .bg-pattern {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
-            opacity: 0.1;
-            z-index: -1;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* Loader Screen */
         #loader { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: var(--biru-persib); display: flex; align-items: center; 
             justify-content: center; flex-direction: column; z-index: 9999; 
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid #fff; 
+            border-top: 5px solid var(--emas-persib); border-radius: 50%; 
+            animation: spin 1s linear infinite;
         }
 
         /* Cover Section */
@@ -99,63 +98,56 @@
             letter-spacing: 1px;
             transition: 0.3s;
         }
-        .btn-persib:active { transform: scale(0.95); }
 
-        /* Countdown Style */
         #countdown { display: flex; justify-content: center; gap: 12px; margin-top: 25px; }
         .cd-item { background: var(--biru-persib); color: white; padding: 12px; border-radius: 12px; min-width: 75px; border: 1px solid var(--emas-persib); }
         .cd-number { display: block; font-size: 1.5em; font-weight: bold; color: var(--emas-persib); }
         .cd-label { font-size: 0.7em; text-transform: uppercase; opacity: 0.8; }
 
-        /* Modal Style */
+        /* Modal */
         .modal { display: none; position: fixed; z-index: 8000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,45,95,0.95); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: #fff; padding: 35px 25px; border-radius: 20px; width: 100%; max-width: 380px; text-align: center; border: 4px solid var(--biru-persib); position: relative; }
-        
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #999; }
     </style>
 </head>
 <body>
 
-    <div class="bg-pattern"></div>
-
     <div id="loader">
-        <div style="width: 50px; height: 50px; border: 5px solid #fff; border-top: 5px solid var(--emas-persib); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <div class="spinner"></div>
         <p style="color: white; margin-top: 20px; font-family: 'Bebas Neue'; letter-spacing: 3px;">MEMPERSIAPKAN HARI BAHAGIA...</p>
     </div>
 
     <div id="modalAngga" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="tutupModal('modalAngga')">&times;</span>
+            <span class="close-btn" onclick="tutupModal('modalAngga')">×</span>
             <h2 style="font-family: 'Bebas Neue'; color: var(--biru-persib); font-size: 2.2rem;">ANGGA</h2>
             <hr style="margin: 15px 0; opacity: 0.2;">
-            <p style="font-weight: bold; color: var(--emas-persib); text-transform: uppercase; font-size: 0.8em; letter-spacing: 1px;">Putra Dari:</p>
-            <p style="font-size: 1.2rem; margin-top: 10px; color: #333;">Bpk. Asep <br> & <br> Ibu Jamilah</p>
+            <p style="font-weight: bold; color: var(--emas-persib); text-transform: uppercase; font-size: 0.8em;">Putra Dari:</p>
+            <p style="font-size: 1.2rem; margin-top: 10px;">Bpk. Asep & Ibu Jamilah</p>
         </div>
     </div>
 
     <div id="modalSafitri" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="tutupModal('modalSafitri')">&times;</span>
+            <span class="close-btn" onclick="tutupModal('modalSafitri')">×</span>
             <h2 style="font-family: 'Bebas Neue'; color: var(--biru-persib); font-size: 2.2rem;">SAFITRI</h2>
             <hr style="margin: 15px 0; opacity: 0.2;">
-            <p style="font-weight: bold; color: var(--emas-persib); text-transform: uppercase; font-size: 0.8em; letter-spacing: 1px;">Putri Dari:</p>
-            <p style="font-size: 1.2rem; margin-top: 10px; color: #333;">Bpk. Unang <br> & <br> Ibu Misrah</p>
+            <p style="font-weight: bold; color: var(--emas-persib); text-transform: uppercase; font-size: 0.8em;">Putri Dari:</p>
+            <p style="font-size: 1.2rem; margin-top: 10px;">Bpk. Unang & Ibu Misrah</p>
         </div>
     </div>
 
     <div id="cover">
         <h2 style="font-family: 'Great Vibes'; font-size: 2.8em; color: var(--emas-persib);">The Wedding of</h2>
         <h1 style="font-family: 'Bebas Neue'; font-size: 4.5em; letter-spacing: 4px; line-height: 1;">ANGGA & SAFITRI</h1>
-        <p style="margin: 25px 0; letter-spacing: 3px; font-weight: 300;">26 APRIL 2026</p>
+        <p style="margin: 25px 0; letter-spacing: 3px;">26 APRIL 2026</p>
         <button onclick="bukaUndangan()" class="btn-persib">💙 Buka Undangan</button>
     </div>
 
     <div id="isi" class="main-content">
-
         <div class="section-card">
             <img src="https://upload.wikimedia.org/wikipedia/id/thumb/c/cc/Persib_Bandung_logo.svg/1200px-Persib_Bandung_logo.svg.png" style="width: 70px; margin-bottom: 20px;">
-            <p style="font-style: italic; color: #555; line-height: 1.8; font-size: 0.95em;">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri supaya kamu cenderung dan merasa tenteram kepadanya..." <br><strong>(QS. Ar-Rum: 21)</strong></p>
-            
+            <p style="font-style: italic; color: #555; line-height: 1.8;">"Menuju satu tujuan dalam ikatan suci pernikahan."</p>
             <div id="countdown">
                 <div class="cd-item"><span id="days" class="cd-number">00</span><span class="cd-label">Hari</span></div>
                 <div class="cd-item"><span id="hours" class="cd-number">00</span><span class="cd-label">Jam</span></div>
@@ -165,74 +157,68 @@
         </div>
 
         <div class="section-card">
-            <h2 style="font-family: 'Bebas Neue'; color: var(--biru-persib); letter-spacing: 2px; font-size: 2rem;">Mempelai</h2>
-            
+            <h2 style="font-family: 'Bebas Neue'; color: var(--biru-persib); font-size: 2rem;">Mempelai</h2>
             <div class="nama-pengantin">ANGGA</div>
-            <p style="font-size: 0.85em; color: #777; margin-bottom: 10px;">Putra Bpk. Asep & Ibu Jamilah</p>
-            <button onclick="bukaModal('modalAngga')" style="background:none; border:none; color:var(--biru-persib); cursor:pointer; font-size:0.75em; text-transform:uppercase; font-weight:bold;">Lihat Detail</button>
-
+            <button onclick="bukaModal('modalAngga')" style="background:none; border:none; color:var(--biru-persib); cursor:pointer; font-weight:bold; text-decoration:underline;">Detail Keluarga</button>
             <span class="ampersand">&</span>
-
             <div class="nama-pengantin">SAFITRI</div>
-            <p style="font-size: 0.85em; color: #777; margin-bottom: 10px;">Putri Bpk. Unang & Ibu Misrah</p>
-            <button onclick="bukaModal('modalSafitri')" style="background:none; border:none; color:var(--biru-persib); cursor:pointer; font-size:0.75em; text-transform:uppercase; font-weight:bold;">Lihat Detail</button>
+            <button onclick="bukaModal('modalSafitri')" style="background:none; border:none; color:var(--biru-persib); cursor:pointer; font-weight:bold; text-decoration:underline;">Detail Keluarga</button>
         </div>
 
         <div class="section-card">
             <h2 style="font-family: 'Bebas Neue'; color: var(--biru-persib); font-size: 2rem;">WAKTU & LOKASI</h2>
-            <div style="margin: 30px 0;">
-                <i class="far fa-calendar-alt" style="font-size: 2.5em; color: var(--emas-persib); margin-bottom: 15px;"></i>
-                <p style="font-size: 1.3em; font-weight: bold; color: var(--biru-persib);">Minggu, 26 April 2026</p>
-                <p>Pukul 09.00 WIB - Selesai</p>
-            </div>
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-            <div style="margin-bottom: 30px;">
-                <i class="fas fa-map-marker-alt" style="font-size: 2.5em; color: var(--emas-persib); margin-bottom: 15px;"></i>
+            <div style="margin: 20px 0;">
+                <p style="font-size: 1.2rem; font-weight: bold;">Minggu, 26 April 2026</p>
+                <p>09.00 WIB - Selesai</p>
+                <hr style="margin: 15px 0; opacity: 0.1;">
                 <p style="font-weight: bold; color: var(--biru-persib);">Kediaman Mempelai Wanita</p>
-                <p style="font-size: 0.95em; line-height: 1.5;">Jatisari, Kec. Bojongpicung, <br>Kabupaten Cianjur</p>
+                <p>Jatisari, Bojongpicung, Cianjur</p>
             </div>
-            <a href="https://maps.google.com" target="_blank" class="btn-persib" style="font-size: 0.8em; width: 100%;">Buka Petunjuk Lokasi</a>
+            <a href="https://maps.google.com" target="_blank" class="btn-persib" style="font-size: 0.8em;">📍 Cek Lokasi</a>
         </div>
-
-        <footer style="text-align: center; color: rgba(255,255,255,0.5); padding: 50px 0; font-size: 0.7em; letter-spacing: 3px;">
-            #AnggaSafitriHalal #PersibWedding<br>
-            DESIGN BY ALVIAN &copy; 2026
-        </footer>
     </div>
 
     <script>
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        window.addEventListener('load', () => {
-            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 1200);
+        // Loader Handler
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            setTimeout(function() {
+                loader.style.display = 'none';
+            }, 1000);
         });
 
+        // Buka Undangan
         function bukaUndangan() {
             document.getElementById('cover').classList.add('opened');
             document.body.style.overflow = "auto";
-            setTimeout(() => {
+            setTimeout(function() {
                 document.getElementById('isi').classList.add('visible');
             }, 600);
         }
 
+        // Modal Handler
         function bukaModal(id) { document.getElementById(id).style.display = "flex"; }
         function tutupModal(id) { document.getElementById(id).style.display = "none"; }
 
+        // Countdown
         const targetDate = new Date("April 26, 2026 09:00:00").getTime();
-        setInterval(() => {
+        setInterval(function() {
             const now = new Date().getTime();
             const diff = targetDate - now;
             if(diff < 0) return;
-            document.getElementById('days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
-            document.getElementById('hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-            document.getElementById('mins').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-            document.getElementById('secs').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+            document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('secs').innerText = Math.floor((diff % (1000 * 60)) / 1000);
         }, 1000);
 
-        const obs = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('appear'); });
+        // Scroll Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) entry.target.classList.add('appear');
+            });
         }, { threshold: 0.1 });
-        document.querySelectorAll('.section-card').forEach(s => obs.observe(s));
+        document.querySelectorAll('.section-card').forEach(card => observer.observe(card));
     </script>
 </body>
 </html>
