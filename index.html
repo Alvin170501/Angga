@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Wedding of Alvin & Ima</title>
+    <title>The Wedding of Angga & Saftri</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -95,11 +95,11 @@
     <div id="modalAlvin" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="tutupModal('modalAlvin')">×</span>
-            <h2 style="font-family: 'Playfair Display'; color: #b8860b;">M. Alvian</h2>
-            <p style="margin: 10px 0; font-size: 0.95em;">Cianjur, 17 Mei 2001<br>Anak ke 2 dari 3 Bersaudara</p>
+            <h2 style="font-family: 'Playfair Display'; color: #b8860b;">Angga restu</h2>
+            <p style="margin: 10px 0; font-size: 0.95em;">Cianjur 29 November 2003<br>Anak ke 1 dari 2 Bersaudara</p>
             <p style="font-weight: bold; color: #d4af37; margin-top: 15px;">Putra Dari:</p>
             <img src="ortu-alvin.jpg" class="foto-ortu">
-            <p style="font-size: 0.9em; color: #555;">Bpk. Zen Abdul Aziz & Ibu Suryani Andriani</p>
+            <p style="font-size: 0.9em; color: #555;">Bpk. Brain pamungkos & Ibu angelina jolie</p>
             <a href="https://www.instagram.com/alviannnnm" target="_blank" class="btn-modern" style="padding: 10px 25px; font-size: 0.8em;"><i class="fab fa-instagram"></i> Instagram</a>
         </div>
     </div>
@@ -107,12 +107,12 @@
     <div id="modalIma" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="tutupModal('modalIma')">×</span>
-            <h2 style="font-family: 'Playfair Display'; color: #b8860b;">Siti Rohimah</h2>
-            <p style="margin: 10px 0; font-size: 0.95em;">Cianjur, 23 April 2006<br>Anak ke 3 dari 3 Bersaudara</p>
+            <h2 style="font-family: 'Playfair Display'; color: #b8860b;">Safitri</h2>
+            <p style="margin: 10px 0; font-size: 0.95em;">Cianjur, 31 Oktober 2005<br>Anak ke 2 dari 3 Bersaudara</p>
             <p style="font-weight: bold; color: #d4af37; margin-top: 15px;">Putri Dari:</p>
             <img src="ortu-ima.jpg" class="foto-ortu">
-            <p style="font-size: 0.9em; color: #555;">Bpk. Ayo & Ibu Nani</p>
-            <a href="https://www.instagram.com/stimaaa_" target="_blank" class="btn-modern" style="padding: 10px 25px; font-size: 0.8em;"><i class="fab fa-instagram"></i> Instagram</a>
+            <p style="font-size: 0.9em; color: #555;">Bpk. Jokowi & Ibu ningsih</p>
+            <a href="https://www.instagram.com" target="_blank" class="btn-modern" style="padding: 10px 25px; font-size: 0.8em;"><i class="fab fa-instagram"></i> Instagram</a>
         </div>
     </div>
 
@@ -146,12 +146,12 @@
             <div class="profile-slider" id="sliderA">
                 <img src="alvin-1.jpg" class="active"><img src="alvin-2.jpg"><img src="alvin-3.jpg">
             </div>
-            <div class="nama-klik" onclick="bukaModal('modalAlvin')">M. Alvian (Alvin)</div>
+            <div class="nama-klik" onclick="bukaModal('modalAlvin')">Angga restu (Angga)</div>
             <h1 style="font-family: 'Dancing Script'; margin: 30px 0; color: #d4af37; font-size: 3.5em;">&</h1>
             <div class="profile-slider" id="sliderI">
                 <img src="ima-1.jpg" class="active"><img src="ima-2.jpg"><img src="ima-3.jpg">
             </div>
-            <div class="nama-klik" onclick="bukaModal('modalIma')">Siti Rohimah (Ima)</div>
+            <div class="nama-klik" onclick="bukaModal('modalIma')">Safitri (Fitri)</div>
         </div>
 
         <!-- OUR STORY -->
@@ -159,7 +159,7 @@
             <h2 style="font-family: 'Playfair Display'; color: #b8860b; margin-bottom: 20px;">Our Story</h2>
             <div class="video-wrapper">
                 <video id="videoCinematic" loop muted playsinline>
-                    <source src="video3.mp4" type="video/mp4">
+                    <source src="videoangga.mp4" type="video/mp4">
                 </video>
             </div>
             <p style="font-size: 0.85em; color: #777; font-style: italic;">"Setiap detik bersamamu adalah cerita indah."</p>
@@ -224,35 +224,7 @@
 
         <!-- GUEST BOOK -->
         <div class="section-card">
-            <h2 style="font-family: 'Playfair Display'; color: #b8860b; margin-bottom: 20px;">Guest Book</h2>
-            <p style="font-size: 0.85em; color: #777; margin-bottom: 25px;">Berikan ucapan manis & doa restu Anda untuk kami</p>
-            
-            <form id="guestForm" style="text-align: left;">
-                <div style="margin-bottom: 15px;">
-                    <input type="text" id="namaPengirim" placeholder="Nama Anda" required 
-                        style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Quicksand'; outline: none;">
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <textarea id="pesanDoa" placeholder="Tulis ucapan & doa..." rows="4" required 
-                        style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Quicksand'; outline: none; resize: none;"></textarea>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <select id="konfirmasi" required style="width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #ddd; font-family: 'Quicksand'; background: white;">
-                        <option value="">Konfirmasi Kehadiran</option>
-                        <option value="Hadir">Hadir</option>
-                        <option value="Tidak Hadir">Tidak Hadir</option>
-                        <option value="Masih Ragu">Masih Ragu</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-modern" style="width: 100%; margin-top: 0;">
-                    <i class="fas fa-paper-plane"></i> Kirim Ucapan
-                </button>
-            </form>
-
-            <div id="displayUcapan" style="margin-top: 30px; max-height: 350px; overflow-y: auto; text-align: left; padding-right: 5px;">
-                <!-- Ucapan akan muncul di sini -->
-            </div>
-        </div>
+        
 
         <footer style="text-align: center; padding: 50px 0; color: #bbb; font-size: 0.7em; letter-spacing: 4px; text-transform: uppercase;">
             Made with Love by Alvian © 2026<br>Instagram : @alviannnnm
@@ -321,31 +293,6 @@
             try {
                 await addDoc(ucapanRef, { nama, pesan, status, timestamp: serverTimestamp() });
 
-                const waPesan = `Halo Alvin & Ima! 🎊\n\nDari: ${nama}\nStatus: ${status}\nPesan: ${pesan}`;
-                const linkWA = `https://wa.me/6285156390455?text=${encodeURIComponent(waPesan)}`;
-
-                const notif = document.createElement('div');
-                notif.style = "background:#f0fdf4; border:1px solid #86efac; padding:15px; border-radius:12px; margin-top:15px; text-align:center;";
-                notif.innerHTML = `
-                    <p style="color:#166534; font-size:0.9em; margin-bottom:10px;">✅ Ucapan berhasil terkirim!</p>
-                    <a href="${linkWA}" target="_blank" 
-                       style="background:#25D366; color:white; padding:10px 20px; 
-                              border-radius:20px; text-decoration:none; font-size:0.85em; display:inline-block;">
-                        <i class="fab fa-whatsapp"></i> Kirim juga via WhatsApp
-                    </a>`;
-                document.getElementById('guestForm').after(notif);
-                setTimeout(() => notif.remove(), 10000);
-                this.reset();
-
-            } catch (err) {
-                alert("Gagal mengirim, coba lagi 🙏");
-                console.error(err);
-            }
-
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Ucapan';
-        });
-    </script>
 
     <!-- SCRIPT UTAMA -->
     <script>
