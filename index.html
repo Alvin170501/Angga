@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Timer Kalkulator</title>
+    <title>Modern Timer & Alarm</title>
     <style>
         :root {
             --primary: #6366f1;
             --primary-hover: #4f46e5;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             display: flex;
@@ -27,135 +28,150 @@
 
         .container {
             background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 24px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 380px;
+            max-width: 350px;
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        h2 { margin-bottom: 0.5rem; font-weight: 700; color: var(--primary); }
-        p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
+        h2 { margin-bottom: 0.5rem; font-size: 1.5rem; letter-spacing: -0.025em; }
+        p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; }
 
         input {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
+            padding: 14px;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            color: white;
+            text-align: center;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             box-sizing: border-box;
+            margin-bottom: 1rem;
         }
 
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2); }
 
         button {
             width: 100%;
             padding: 14px;
-            background-color: var(--primary);
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: transform 0.2s, background 0.2s;
         }
 
-        button:hover { background-color: var(--primary-hover); }
+        button:active { transform: scale(0.98); }
 
         .result-box {
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             padding: 1.5rem;
-            background: #f1f5f9;
-            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 20px;
+            border: 1px dashed #334155;
         }
 
-        .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-        .time-display { font-size: 2rem; font-weight: 800; color: var(--text-main); margin-top: 5px; }
-        
-        /* Animasi sederhana */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .time-display {
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: monospace;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
         }
-        .running { animation: pulse 2s infinite ease-in-out; }
+
+        .status { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; }
+
+        /* Animasi saat jalan */
+        .is-running { border-color: var(--accent) !important; animation: glow 2s infinite; }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Timer Pro</h2>
-    <p>Hitung durasi item (1 item = 5 detik)</p>
+    <h2>Timer Pro ⏱️</h2>
+    <p>1 Item = 5 Detik</p>
     
-    <div class="input-group">
-        <input type="number" id="itemInput" placeholder="Masukkan jumlah item..." min="1">
-    </div>
-    
-    <button onclick="hitungDanMulai()">Mulai Kalkulasi</button>
+    <input type="number" id="itemInput" placeholder="Jumlah Item (misal: 15)" min="1">
+    <button onclick="startTimer()">Mulai Timer</button>
 
     <div class="result-box" id="resultBox">
-        <div class="label">Total Durasi</div>
         <div class="time-display" id="timeDisplay">00:00</div>
+        <div class="status" id="statusLabel">Standby</div>
     </div>
 </div>
 
-<script>
-    let interval;
+<audio id="alarmSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
-    function formatWaktu(totalDetik) {
-        const menit = Math.floor(totalDetik / 60);
-        const detik = totalDetik % 60;
-        // Menambahkan angka 0 di depan jika di bawah 10
-        const displayMenit = menit < 10 ? '0' + menit : menit;
-        const displayDetik = detik < 10 ? '0' + detik : detik;
-        return `${displayMenit}:${displayDetik}`;
+<script>
+    let timer;
+    const alarm = document.getElementById('alarmSound');
+    const display = document.getElementById('timeDisplay');
+    const statusLabel = document.getElementById('statusLabel');
+    const box = document.getElementById('resultBox');
+
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     }
 
-    function hitungDanMulai() {
-        const input = document.getElementById('itemInput');
-        const display = document.getElementById('timeDisplay');
-        const box = document.getElementById('resultBox');
-        
-        let jumlahItem = parseInt(input.value);
+    function startTimer() {
+        const input = document.getElementById('itemInput').value;
+        let totalSeconds = parseInt(input) * 5;
 
-        if (isNaN(jumlahItem) || jumlahItem <= 0) {
-            alert("Isi angkanya dulu, Bos!");
+        if (isNaN(totalSeconds) || totalSeconds <= 0) {
+            alert("Masukkan jumlah item dulu ya!");
             return;
         }
 
-        // 1 item = 5 detik
-        let totalWaktu = jumlahItem * 5;
+        // Reset & Start
+        clearInterval(timer);
+        alarm.pause(); 
+        alarm.currentTime = 0;
         
-        // Bersihkan interval sebelumnya jika ada
-        clearInterval(interval);
-        box.classList.add('running');
+        statusLabel.innerText = "Running...";
+        statusLabel.style.color = "#10b981";
+        box.classList.add('is-running');
 
-        // Update display pertama kali
-        display.innerText = formatWaktu(totalWaktu);
+        display.innerText = formatTime(totalSeconds);
 
-        interval = setInterval(() => {
-            totalWaktu--;
+        timer = setInterval(() => {
+            totalSeconds--;
             
-            if (totalWaktu >= 0) {
-                display.innerText = formatWaktu(totalWaktu);
+            if (totalSeconds >= 0) {
+                display.innerText = formatTime(totalSeconds);
             } else {
-                clearInterval(interval);
-                box.classList.remove('running');
-                alert("Waktu Selesai!");
+                clearInterval(timer);
+                finishTimer();
             }
         }, 1000);
+    }
+
+    function finishTimer() {
+        statusLabel.innerText = "Waktu Habis!";
+        statusLabel.style.color = "#ef4444";
+        box.classList.remove('is-running');
+        
+        // Play Alarm
+        alarm.play().catch(e => console.log("User interaction required for audio"));
+        
+        // Alert sebagai backup
+        setTimeout(() => {
+            alert("⏰ Waktu Beres!");
+        }, 500);
     }
 </script>
 
