@@ -3,60 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Detik 1x5</title>
+    <title>Modern Timer Kalkulator</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; width: 300px; }
-        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
-        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #0056b3; }
-        #result { margin-top: 20px; font-weight: bold; font-size: 1.2rem; color: #333; }
-        #timer { font-size: 2rem; color: #ff4757; margin-top: 10px; }
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        h2 { margin-bottom: 0.5rem; font-weight: 700; color: var(--primary); }
+        p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        button:hover { background-color: var(--primary-hover); }
+
+        .result-box {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f1f5f9;
+            border-radius: 16px;
+        }
+
+        .label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .time-display { font-size: 2rem; font-weight: 800; color: var(--text-main); margin-top: 5px; }
+        
+        /* Animasi sederhana */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .running { animation: pulse 2s infinite ease-in-out; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h3>Input Jumlah Item</h3>
-    <p>(1 Item = 5 Detik)</p>
-    <input type="number" id="itemInput" placeholder="Contoh: 15" min="1">
-    <button onclick="mulaiHitung()">Mulai Hitung</button>
+<div class="container">
+    <h2>Timer Pro</h2>
+    <p>Hitung durasi item (1 item = 5 detik)</p>
+    
+    <div class="input-group">
+        <input type="number" id="itemInput" placeholder="Masukkan jumlah item..." min="1">
+    </div>
+    
+    <button onclick="hitungDanMulai()">Mulai Kalkulasi</button>
 
-    <div id="result"> Total Durasi: <span id="totalDetik">0</span>s</div>
-    <div id="timer">00</div>
+    <div class="result-box" id="resultBox">
+        <div class="label">Total Durasi</div>
+        <div class="time-display" id="timeDisplay">00:00</div>
+    </div>
 </div>
 
 <script>
-    let countdown;
+    let interval;
 
-    function mulaiHitung() {
-        // Ambil nilai input
-        const jumlahItem = document.getElementById('itemInput').value;
-        const displayTotal = document.getElementById('totalDetik');
-        const displayTimer = document.getElementById('timer');
+    function formatWaktu(totalDetik) {
+        const menit = Math.floor(totalDetik / 60);
+        const detik = totalDetik % 60;
+        // Menambahkan angka 0 di depan jika di bawah 10
+        const displayMenit = menit < 10 ? '0' + menit : menit;
+        const displayDetik = detik < 10 ? '0' + detik : detik;
+        return `${displayMenit}:${displayDetik}`;
+    }
+
+    function hitungDanMulai() {
+        const input = document.getElementById('itemInput');
+        const display = document.getElementById('timeDisplay');
+        const box = document.getElementById('resultBox');
         
-        // Validasi input
-        if (jumlahItem <= 0 || jumlahItem === "") {
-            alert("Masukkan angka yang bener ya!");
+        let jumlahItem = parseInt(input.value);
+
+        if (isNaN(jumlahItem) || jumlahItem <= 0) {
+            alert("Isi angkanya dulu, Bos!");
             return;
         }
 
-        // Kalkulasi: n x 5 detik
+        // 1 item = 5 detik
         let totalWaktu = jumlahItem * 5;
-        displayTotal.innerText = totalWaktu;
         
-        // Reset timer jika ada yang sedang berjalan
-        clearInterval(countdown);
+        // Bersihkan interval sebelumnya jika ada
+        clearInterval(interval);
+        box.classList.add('running');
 
-        // Jalankan countdown
-        displayTimer.innerText = totalWaktu;
-        countdown = setInterval(() => {
+        // Update display pertama kali
+        display.innerText = formatWaktu(totalWaktu);
+
+        interval = setInterval(() => {
             totalWaktu--;
-            displayTimer.innerText = totalWaktu;
-
-            if (totalWaktu <= 0) {
-                clearInterval(countdown);
-                alert("Waktu Habis!");
+            
+            if (totalWaktu >= 0) {
+                display.innerText = formatWaktu(totalWaktu);
+            } else {
+                clearInterval(interval);
+                box.classList.remove('running');
+                alert("Waktu Selesai!");
             }
         }, 1000);
     }
