@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Detik 1x5</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0056b3; }
+        #result { margin-top: 20px; font-weight: bold; font-size: 1.2rem; color: #333; }
+        #timer { font-size: 2rem; color: #ff4757; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h3>Input Jumlah Item</h3>
+    <p>(1 Item = 5 Detik)</p>
+    <input type="number" id="itemInput" placeholder="Contoh: 15" min="1">
+    <button onclick="mulaiHitung()">Mulai Hitung</button>
+
+    <div id="result"> Total Durasi: <span id="totalDetik">0</span>s</div>
+    <div id="timer">00</div>
+</div>
+
+<script>
+    let countdown;
+
+    function mulaiHitung() {
+        // Ambil nilai input
+        const jumlahItem = document.getElementById('itemInput').value;
+        const displayTotal = document.getElementById('totalDetik');
+        const displayTimer = document.getElementById('timer');
+        
+        // Validasi input
+        if (jumlahItem <= 0 || jumlahItem === "") {
+            alert("Masukkan angka yang bener ya!");
+            return;
+        }
+
+        // Kalkulasi: n x 5 detik
+        let totalWaktu = jumlahItem * 5;
+        displayTotal.innerText = totalWaktu;
+        
+        // Reset timer jika ada yang sedang berjalan
+        clearInterval(countdown);
+
+        // Jalankan countdown
+        displayTimer.innerText = totalWaktu;
+        countdown = setInterval(() => {
+            totalWaktu--;
+            displayTimer.innerText = totalWaktu;
+
+            if (totalWaktu <= 0) {
+                clearInterval(countdown);
+                alert("Waktu Habis!");
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
