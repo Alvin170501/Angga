@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Timer & Alarm</title>
+    <title>Modern Timer Pro - Musik.mp3</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -64,7 +64,7 @@
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s, background 0.2s;
@@ -79,7 +79,6 @@
             background: rgba(15, 23, 42, 0.5);
             border-radius: 20px;
             border: 1px dashed #334155;
-            transition: all 0.3s;
         }
 
         .time-display {
@@ -90,9 +89,8 @@
             text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
         }
 
-        .status { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .status { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; }
 
-        /* Animasi saat jalan */
         .is-running { border: 1px solid var(--accent) !important; animation: glow 2s infinite; }
         @keyframes glow {
             0%, 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.1); }
@@ -104,7 +102,7 @@
 
 <div class="container">
     <h2>Timer Pro ⏱️</h2>
-    <p>Setiap 1 Item = 5 Detik</p>
+    <p>1 Item = 5 Detik</p>
     
     <input type="number" id="itemInput" placeholder="Jumlah Item (misal: 10)" min="1">
     <button onclick="startTimer()">Mulai Timer</button>
@@ -119,7 +117,18 @@
 
 <script>
     let timer;
-        function startTimer() {
+    const alarm = document.getElementById('alarmSound');
+    const display = document.getElementById('timeDisplay');
+    const statusLabel = document.getElementById('statusLabel');
+    const box = document.getElementById('resultBox');
+
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
         const input = document.getElementById('itemInput').value;
         let totalSeconds = parseInt(input) * 5;
 
@@ -128,11 +137,11 @@
             return;
         }
 
-        // Reset & Load Audio (Penting!)
+        // Reset & Re-load audio
         clearInterval(timer);
         alarm.pause(); 
         alarm.currentTime = 0;
-        alarm.load(); // Memaksa browser me-reload file audio
+        alarm.load(); // Penting agar browser siap memutar file lokal
         
         statusLabel.innerText = "Running...";
         statusLabel.style.color = "#10b981";
@@ -157,16 +166,21 @@
         statusLabel.style.color = "#ef4444";
         box.classList.remove('is-running');
         
-        // Memutar musik.mp3 dengan log error jika gagal
-        let playPromise = alarm.play();
+        // Putar audio dengan proteksi error
+        const playPromise = alarm.play();
         
         if (playPromise !== undefined) {
             playPromise.catch(error => {
-                console.log("Gagal putar musik: ", error);
-                alert("Waktu habis! (Musik gagal putar, cek nama file musik.mp3)");
+                console.error("Gagal memutar audio:", error);
+                alert("Waktu Habis! (Catatan: File musik.mp3 mungkin tidak ditemukan atau tidak didukung)");
             });
         }
+        
+        setTimeout(() => {
+            alert("⏰ Waktu Beres!");
+        }, 500);
     }
+</script>
 
 </body>
 </html>
