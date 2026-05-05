@@ -77,7 +77,7 @@
 
         .btn-stop { 
             background: var(--danger); 
-            display: none; /* Sembunyi sampai timer selesai/jalan */
+            display: none; 
         }
 
         button:active { transform: scale(0.98); }
@@ -151,14 +151,18 @@
             return;
         }
 
-        // Reset state
-        stopAlarm();
+        // Hentikan musik & reset audio saja tanpa memicu fungsi stopAlarm penuh
+        alarm.pause();
+        alarm.currentTime = 0;
+        
+        // Hentikan timer lama jika ada
         clearInterval(timer);
         
+        // Setup Tampilan
         statusLabel.innerText = "Running...";
         statusLabel.style.color = "#10b981";
         box.classList.add('is-running');
-        stopBtn.style.display = "block"; // Tampilkan tombol stop saat mulai
+        stopBtn.style.display = "block"; 
 
         display.innerText = formatTime(totalSeconds);
 
@@ -179,27 +183,24 @@
         statusLabel.style.color = "#ef4444";
         box.classList.remove('is-running');
         
-        // Putar audio
-        const playPromise = alarm.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(error => console.log("Cek file musik.mp3 kamu!"));
-        }
+        // Putar audio hanya saat waktu benar-benar habis
+        alarm.play().catch(error => {
+            console.log("Musik gagal putar, cek file musik.mp3");
+        });
     }
 
     function stopAlarm() {
-        // Matikan timer jika masih jalan
         clearInterval(timer);
-        
-        // Matikan musik
         alarm.pause();
         alarm.currentTime = 0;
         
-        // Reset tampilan
+        // Reset tampilan ke awal
         statusLabel.innerText = "Standby";
         statusLabel.style.color = "#94a3b8";
         box.classList.remove('is-running');
         stopBtn.style.display = "none";
         display.innerText = "00:00";
+        document.getElementById('itemInput').value = "";
     }
 </script>
 
