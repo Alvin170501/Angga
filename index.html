@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maxdiss buatan ilham</title>
+    <title>Maxdiss Pro</title>
     <style>
         :root {
             --primary: #6366f1;
-            --primary-hover: #4f46e5;
             --bg: #0f172a;
             --card-bg: #1e293b;
             --text-main: #f8fafc;
@@ -17,7 +16,7 @@
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             display: flex;
@@ -31,15 +30,11 @@
             background: var(--card-bg);
             padding: 2rem;
             border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 350px;
+            max-width: 320px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.1);
         }
-
-        h2 { margin-bottom: 0.5rem; font-size: 1.5rem; letter-spacing: -0.025em; }
-        p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; }
 
         input {
             width: 100%;
@@ -47,13 +42,10 @@
             background: #0f172a;
             border: 2px solid #334155;
             border-radius: 14px;
-            font-size: 1.1rem;
             color: white;
             text-align: center;
-            outline: none;
-            transition: all 0.3s;
-            box-sizing: border-box;
             margin-bottom: 1rem;
+            box-sizing: border-box;
         }
 
         .btn-group { display: flex; gap: 10px; }
@@ -64,10 +56,8 @@
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .btn-start { background: var(--primary); }
@@ -78,19 +68,10 @@
             padding: 1.5rem;
             background: rgba(15, 23, 42, 0.5);
             border-radius: 20px;
-            border: 1px dashed #334155;
         }
 
-        .time-display {
-            font-size: 3rem;
-            font-weight: 800;
-            font-family: monospace;
-            color: var(--accent);
-        }
-
-        .status { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-transform: uppercase; }
-
-        .is-running { border: 1px solid var(--accent) !important; }
+        .time-display { font-size: 3rem; font-weight: 800; color: var(--accent); }
+        .status { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; }
     </style>
 </head>
 <body>
@@ -98,7 +79,6 @@
 <div class="container">
     <h2>Maxdiss buatan ilham</h2>
     <p>1 Item = 5 Detik</p>
-    
     <input type="number" id="itemInput" placeholder="Jumlah Item">
     
     <div class="btn-group">
@@ -106,20 +86,19 @@
         <button id="stopBtn" class="btn-stop" onclick="stopEverything()">Stop</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <div class="result-box">
         <div class="time-display" id="timeDisplay">00:00</div>
         <div class="status" id="statusLabel">Standby</div>
     </div>
 </div>
 
-<audio id="alarmSound" src="musik.mp3" preload="auto" loop></audio>
+<audio id="alarmSound" preload="none" loop></audio>
 
 <script>
     let timer = null;
     const alarm = document.getElementById('alarmSound');
     const display = document.getElementById('timeDisplay');
     const statusLabel = document.getElementById('statusLabel');
-    const box = document.getElementById('resultBox');
     const stopBtn = document.getElementById('stopBtn');
     const startBtn = document.getElementById('startBtn');
 
@@ -133,21 +112,15 @@
         const input = document.getElementById('itemInput').value;
         let totalSeconds = parseInt(input) * 5;
 
-        if (isNaN(totalSeconds) || totalSeconds <= 0) {
-            alert("Masukkan jumlah item!");
-            return;
-        }
+        if (isNaN(totalSeconds) || totalSeconds <= 0) return;
 
-        // PASTIKAN AUDIO MATI TOTAL SEBELUM MULAI
-        alarm.pause();
-        alarm.currentTime = 0;
-        
+        // Kosongin sumber suara biar pas dipencet gak ada yang bunyi
+        alarm.src = ""; 
+        alarm.load();
+
         if(timer) clearInterval(timer);
         
         statusLabel.innerText = "Running...";
-        statusLabel.style.color = "#10b981";
-        box.classList.add('is-running');
-        
         startBtn.style.display = "none"; 
         stopBtn.style.display = "block"; 
 
@@ -166,33 +139,25 @@
 
     function finishTimer() {
         statusLabel.innerText = "Waktu Habis!";
-        statusLabel.style.color = "#ef4444";
-        box.classList.remove('is-running');
-        
-        // HANYA DISINI MUSIK DIPUTAR
-        alarm.play().catch(e => console.log("Audio play blocked"));
+        // BARU DISINI KASIH SUMBER SUARANYA
+        alarm.src = "musik.mp3";
+        alarm.play().catch(e => console.log("Blocked"));
     }
 
     function stopEverything() {
-        // MATIKAN TIMER
         if(timer) clearInterval(timer);
         timer = null;
-
-        // MATIKAN MUSIK SECARA TOTAL
+        
+        // Hapus sumber suara lagi
         alarm.pause();
-        alarm.currentTime = 0;
+        alarm.src = ""; 
+        alarm.load();
         
-        // RESET TAMPILAN
         statusLabel.innerText = "Standby";
-        statusLabel.style.color = "#94a3b8";
-        box.classList.remove('is-running');
         display.innerText = "00:00";
-        
         startBtn.style.display = "block";
         stopBtn.style.display = "none";
-        document.getElementById('itemInput').value = "";
     }
 </script>
-
 </body>
 </html>
