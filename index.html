@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Timer Pro - Musik.mp3</title>
+    <title>Maxdiss buatan ilham</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -13,6 +13,7 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent: #10b981;
+            --danger: #ef4444;
         }
 
         body {
@@ -57,20 +58,28 @@
 
         input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2); }
 
+        .btn-group { display: flex; gap: 10px; }
+
         button {
-            width: 100%;
+            flex: 1;
             padding: 14px;
-            background: var(--primary);
             color: white;
             border: none;
             border-radius: 14px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
+            transition: all 0.2s;
         }
 
-        button:hover { background: var(--primary-hover); }
+        .btn-start { background: var(--primary); }
+        .btn-start:hover { background: var(--primary-hover); }
+
+        .btn-stop { 
+            background: var(--danger); 
+            display: none; /* Sembunyi sampai timer selesai/jalan */
+        }
+
         button:active { transform: scale(0.98); }
 
         .result-box {
@@ -104,8 +113,12 @@
     <h2>Maxdiss buatan ilham</h2>
     <p>1 Item = 5 Detik</p>
     
-    <input type="number" id="itemInput" placeholder="Jumlah Item (misal: 10)" min="1">
-    <button onclick="startTimer()">Mulai Timer</button>
+    <input type="number" id="itemInput" placeholder="Jumlah Item" min="1">
+    
+    <div class="btn-group">
+        <button class="btn-start" onclick="startTimer()">Mulai</button>
+        <button id="stopBtn" class="btn-stop" onclick="stopAlarm()">Stop</button>
+    </div>
 
     <div class="result-box" id="resultBox">
         <div class="time-display" id="timeDisplay">00:00</div>
@@ -113,7 +126,7 @@
     </div>
 </div>
 
-<audio id="alarmSound" src="musik.mp3" preload="auto"></audio>
+<audio id="alarmSound" src="musik.mp3" preload="auto" loop></audio>
 
 <script>
     let timer;
@@ -121,6 +134,7 @@
     const display = document.getElementById('timeDisplay');
     const statusLabel = document.getElementById('statusLabel');
     const box = document.getElementById('resultBox');
+    const stopBtn = document.getElementById('stopBtn');
 
     function formatTime(seconds) {
         const m = Math.floor(seconds / 60);
@@ -137,15 +151,14 @@
             return;
         }
 
-        // Reset & Re-load audio
+        // Reset state
+        stopAlarm();
         clearInterval(timer);
-        alarm.pause(); 
-        alarm.currentTime = 0;
-        alarm.load(); // Penting agar browser siap memutar file lokal
         
         statusLabel.innerText = "Running...";
         statusLabel.style.color = "#10b981";
         box.classList.add('is-running');
+        stopBtn.style.display = "block"; // Tampilkan tombol stop saat mulai
 
         display.innerText = formatTime(totalSeconds);
 
@@ -166,19 +179,27 @@
         statusLabel.style.color = "#ef4444";
         box.classList.remove('is-running');
         
-        // Putar audio dengan proteksi error
+        // Putar audio
         const playPromise = alarm.play();
-        
         if (playPromise !== undefined) {
-            playPromise.catch(error => {
-                console.error("Gagal memutar audio:", error);
-                alert("Waktu Habis! (Catatan: File musik.mp3 mungkin tidak ditemukan atau tidak didukung)");
-            });
+            playPromise.catch(error => console.log("Cek file musik.mp3 kamu!"));
         }
+    }
+
+    function stopAlarm() {
+        // Matikan timer jika masih jalan
+        clearInterval(timer);
         
-        setTimeout(() => {
-            alert("⏰ Waktu Beres!");
-        }, 500);
+        // Matikan musik
+        alarm.pause();
+        alarm.currentTime = 0;
+        
+        // Reset tampilan
+        statusLabel.innerText = "Standby";
+        statusLabel.style.color = "#94a3b8";
+        box.classList.remove('is-running');
+        stopBtn.style.display = "none";
+        display.innerText = "00:00";
     }
 </script>
 
