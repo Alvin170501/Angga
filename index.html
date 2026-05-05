@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maxdiss Pro</title>
+    <title>Maxdiss Pro - Fix Musik</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -46,6 +46,7 @@
             text-align: center;
             margin-bottom: 1rem;
             box-sizing: border-box;
+            outline: none;
         }
 
         .btn-group { display: flex; gap: 10px; }
@@ -92,11 +93,10 @@
     </div>
 </div>
 
-<audio id="alarmSound" preload="none" loop></audio>
-
 <script>
     let timer = null;
-    const alarm = document.getElementById('alarmSound');
+    let alarmInstance = null; // Objek audio akan disimpan di sini nanti
+
     const display = document.getElementById('timeDisplay');
     const statusLabel = document.getElementById('statusLabel');
     const stopBtn = document.getElementById('stopBtn');
@@ -114,10 +114,8 @@
 
         if (isNaN(totalSeconds) || totalSeconds <= 0) return;
 
-        // Kosongin sumber suara biar pas dipencet gak ada yang bunyi
-        alarm.src = ""; 
-        alarm.load();
-
+        // Reset segalanya sebelum mulai
+        bersihkanAudio();
         if(timer) clearInterval(timer);
         
         statusLabel.innerText = "Running...";
@@ -139,24 +137,38 @@
 
     function finishTimer() {
         statusLabel.innerText = "Waktu Habis!";
-        // BARU DISINI KASIH SUMBER SUARANYA
-        alarm.src = "musik.mp3";
-        alarm.play().catch(e => console.log("Blocked"));
+        
+        // BUAT OBJEK AUDIO BARU HANYA DI SINI
+        // Ini trik supaya aplikasi gak autostart pas awal
+        alarmInstance = new Audio("musik.mp3");
+        alarmInstance.loop = true;
+        
+        // Mainkan
+        alarmInstance.play().catch(e => {
+            console.log("Audio play diproteksi sistem");
+        });
     }
 
     function stopEverything() {
         if(timer) clearInterval(timer);
         timer = null;
         
-        // Hapus sumber suara lagi
-        alarm.pause();
-        alarm.src = ""; 
-        alarm.load();
+        bersihkanAudio();
         
         statusLabel.innerText = "Standby";
         display.innerText = "00:00";
         startBtn.style.display = "block";
         stopBtn.style.display = "none";
+        document.getElementById('itemInput').value = "";
+    }
+
+    function bersihkanAudio() {
+        if (alarmInstance) {
+            alarmInstance.pause();
+            alarmInstance.src = ""; // Buang path file agar tidak nyangkut di memori
+            alarmInstance.load();
+            alarmInstance = null; // Hancurkan objeknya
+        }
     }
 </script>
 </body>
