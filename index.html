@@ -119,18 +119,7 @@
 
 <script>
     let timer;
-    const alarm = document.getElementById('alarmSound');
-    const display = document.getElementById('timeDisplay');
-    const statusLabel = document.getElementById('statusLabel');
-    const box = document.getElementById('resultBox');
-
-    function formatTime(seconds) {
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-    }
-
-    function startTimer() {
+        function startTimer() {
         const input = document.getElementById('itemInput').value;
         let totalSeconds = parseInt(input) * 5;
 
@@ -139,10 +128,11 @@
             return;
         }
 
-        // Reset & Start
+        // Reset & Load Audio (Penting!)
         clearInterval(timer);
         alarm.pause(); 
         alarm.currentTime = 0;
+        alarm.load(); // Memaksa browser me-reload file audio
         
         statusLabel.innerText = "Running...";
         statusLabel.style.color = "#10b981";
@@ -167,17 +157,16 @@
         statusLabel.style.color = "#ef4444";
         box.classList.remove('is-running');
         
-        // Memutar musik.mp3
-        alarm.play().catch(e => {
-            console.log("Musik tidak bisa diputar otomatis, butuh interaksi user.");
-        });
+        // Memutar musik.mp3 dengan log error jika gagal
+        let playPromise = alarm.play();
         
-        // Backup notifikasi
-        setTimeout(() => {
-            alert("⏰ Waktu Beres!");
-        }, 500);
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Gagal putar musik: ", error);
+                alert("Waktu habis! (Musik gagal putar, cek nama file musik.mp3)");
+            });
+        }
     }
-</script>
 
 </body>
 </html>
