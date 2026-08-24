@@ -233,14 +233,14 @@
 
         /* Link WhatsApp Style */
         .wa-link {
-            color: #818cf8; /* Warna ungu kebiruan senada tema */
+            color: #818cf8;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
         }
 
         .wa-link:hover {
-            color: var(--accent-success); /* Berubah hijau saat disentuh/hover */
+            color: var(--accent-success);
             text-decoration: underline;
         }
 
@@ -263,11 +263,9 @@
         <!-- Panel Konfigurasi -->
         <div class="card">
             
-            <!-- Panel Info Diperbarui -->
             <div class="info-panel">
                 <div class="info-item">
                     <div class="info-value"> SEMANGAT PAGI!!! </div>
-                    <!-- Tautan WhatsApp Ditambahkan di Sini -->
                     <div class="info-label">
                         <a href="https://wa.me/628163633999" target="_blank" class="wa-link">Klik ini untuk memberikan kritik dan saran</a>
                     </div>
@@ -329,16 +327,27 @@
             return;
         }
 
-        // Reset & inisialisasi
-        bersihkanAudio();
+        // ==========================================
+        // TRIK UNLOCK AUDIO UNTUK ANDROID WEBVIEW
+        // ==========================================
+        if (!alarmInstance) {
+            alarmInstance = new Audio("musik1.mp3");
+        }
+        alarmInstance.volume = 0; // Bisukan suaranya sementara
+        alarmInstance.play().then(() => {
+            alarmInstance.pause();     // Langsung di-pause
+            alarmInstance.currentTime = 0; // Kembalikan ke detik 0
+            alarmInstance.volume = 1;  // Kembalikan volume normal untuk nanti
+        }).catch(e => {
+            console.log("Audio menunggu interaksi penuh dari user.");
+        });
+        // ==========================================
+
         if(timer) clearInterval(timer);
         
         totalDurasiAwal = totalSeconds;
-        
-        // Catat target waktu akhir menggunakan jam sistem agar anti-ngaret
         targetWaktuSelesai = Date.now() + (totalSeconds * 1000);
         
-        // Ubah UI
         statusLabel.innerText = "Status: BERJALAN...";
         statusLabel.style.color = "var(--primary)";
         startBtn.style.display = "none"; 
@@ -357,7 +366,6 @@
             
             if (sisaDetik < 0) sisaDetik = 0;
             
-            // Update Text & Progress Bar
             if (sisaDetik > 0) {
                 display.innerText = formatTime(sisaDetik);
                 
@@ -375,7 +383,7 @@
                 clearInterval(timer);
                 finishTimer();
             }
-        }, 300); // Diperbarui lebih sering agar gerakan waktu mulus
+        }, 300);
     }
 
     function finishTimer() {
@@ -386,22 +394,25 @@
         display.classList.add('finished');
         progressBar.style.width = "0%";
         
-        // Menggunakan file musik1.mp3
-        alarmInstance = new Audio("musik1.mp3");
-        alarmInstance.loop = true;
-        
-        alarmInstance.play().catch(e => {
-            console.log("Browser memblokir autoplay audio.");
-        });
+        // Mainkan audio yang sudah di-unlock tadi
+        if (alarmInstance) {
+            alarmInstance.loop = true;
+            alarmInstance.play().catch(e => {
+                console.log("Audio diblokir oleh sistem WebView Android.");
+            });
+        }
     }
 
     function stopEverything() {
         if(timer) clearInterval(timer);
         timer = null;
         
-        bersihkanAudio();
+        // Hentikan musik tanpa menghancurkan objeknya
+        if (alarmInstance) {
+            alarmInstance.pause();
+            alarmInstance.currentTime = 0; // Kembalikan lagu ke awal
+        }
         
-        // Reset UI
         statusLabel.innerText = "Status: STANDBY";
         statusLabel.style.color = "var(--text-muted)";
         
@@ -417,15 +428,6 @@
         itemInput.disabled = false;
         itemInput.style.opacity = "1";
         itemInput.value = "";
-    }
-
-    function bersihkanAudio() {
-        if (alarmInstance) {
-            alarmInstance.pause();
-            alarmInstance.src = "";
-            alarmInstance.load();
-            alarmInstance = null;
-        }
     }
 </script>
 </body>
