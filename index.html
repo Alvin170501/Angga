@@ -301,7 +301,7 @@
 
 <script>
     let timer = null;
-    let alarmInstance = null;
+    let alarmInstance = null; // Objek audio akan disimpan di sini nanti
     let totalDurasiAwal = 0;
     let targetWaktuSelesai = 0;
 
@@ -322,27 +322,10 @@
         const input = itemInput.value;
         let totalSeconds = parseInt(input) * 5;
 
-        if (isNaN(totalSeconds) || totalSeconds <= 0) {
-            alert("Harap masukkan jumlah item yang valid!");
-            return;
-        }
+        if (isNaN(totalSeconds) || totalSeconds <= 0) return;
 
-        // ==========================================
-        // TRIK UNLOCK AUDIO UNTUK ANDROID WEBVIEW
-        // ==========================================
-        if (!alarmInstance) {
-            alarmInstance = new Audio("musik1.mp3");
-        }
-        alarmInstance.volume = 0; // Bisukan suaranya sementara
-        alarmInstance.play().then(() => {
-            alarmInstance.pause();     // Langsung di-pause
-            alarmInstance.currentTime = 0; // Kembalikan ke detik 0
-            alarmInstance.volume = 1;  // Kembalikan volume normal untuk nanti
-        }).catch(e => {
-            console.log("Audio menunggu interaksi penuh dari user.");
-        });
-        // ==========================================
-
+        // Reset segalanya sebelum mulai (Sama seperti kode pertama)
+        bersihkanAudio();
         if(timer) clearInterval(timer);
         
         totalDurasiAwal = totalSeconds;
@@ -379,7 +362,6 @@
                 }
                 
             } else {
-                display.innerText = "00:00";
                 clearInterval(timer);
                 finishTimer();
             }
@@ -393,25 +375,24 @@
         display.classList.remove('running');
         display.classList.add('finished');
         progressBar.style.width = "0%";
+        display.innerText = "00:00";
         
-        // Mainkan audio yang sudah di-unlock tadi
-        if (alarmInstance) {
-            alarmInstance.loop = true;
-            alarmInstance.play().catch(e => {
-                console.log("Audio diblokir oleh sistem WebView Android.");
-            });
-        }
+        // =======================================================
+        // LOGIKA AUDIO DIKEMBALIKAN PERSIS SEPERTI KODE PERTAMA
+        // =======================================================
+        alarmInstance = new Audio("musik1.mp3");
+        alarmInstance.loop = true;
+        
+        alarmInstance.play().catch(e => {
+            console.log("Audio play diproteksi sistem");
+        });
     }
 
     function stopEverything() {
         if(timer) clearInterval(timer);
         timer = null;
         
-        // Hentikan musik tanpa menghancurkan objeknya
-        if (alarmInstance) {
-            alarmInstance.pause();
-            alarmInstance.currentTime = 0; // Kembalikan lagu ke awal
-        }
+        bersihkanAudio();
         
         statusLabel.innerText = "Status: STANDBY";
         statusLabel.style.color = "var(--text-muted)";
@@ -428,6 +409,18 @@
         itemInput.disabled = false;
         itemInput.style.opacity = "1";
         itemInput.value = "";
+    }
+
+    // =======================================================
+    // LOGIKA BERSIHKAN AUDIO PERSIS SEPERTI KODE PERTAMA
+    // =======================================================
+    function bersihkanAudio() {
+        if (alarmInstance) {
+            alarmInstance.pause();
+            alarmInstance.src = ""; // Buang path file agar tidak nyangkut di memori
+            alarmInstance.load();
+            alarmInstance = null; // Hancurkan objeknya
+        }
     }
 </script>
 </body>
